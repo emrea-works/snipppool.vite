@@ -28,14 +28,14 @@ function App() {
   const [formTag, setFormTag] = useState<SnippetData["tag"]>("");
   const [isListUpdated, setIsListUpdated] = useState<boolean>(false);
 
-
+  
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_RETRIEVE}`);
         const data = await response.json();
         setList(data);
-        // console.log(JSON.stringify(data, null, 2));
       } catch (error) {
         console.error({ message: "Error while fetching data, ", error });
       } finally {
@@ -47,18 +47,7 @@ function App() {
 
 
 
-  console.log(`
-initial values:
--------------------------------------------
-formSnippet: ${formSnippet} 
-formCat: ${formCat} 
-formTag: ${formTag} 
-isListUpdated: ${isListUpdated}
-  `)
-
-
-
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     
     try {
@@ -87,9 +76,7 @@ isListUpdated: ${isListUpdated}
 
 
 
-  const handleDelete = async (itemId: SnippetData["id"]) => {
-    // if (id == null || typeof id == undefined) return;
-
+  async function handleDelete(itemId: SnippetData["id"]) {
     try {
       const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_DELETE}`, {
         method: "DELETE",
@@ -109,16 +96,16 @@ isListUpdated: ${isListUpdated}
     } catch (error) {
       console.error("Error:", error);
     }
-  };
+  }
 
 
 
-  const handleCopy = (
+  function handleCopy(
     e: React.MouseEvent<HTMLTableCellElement, MouseEvent>
-  ) => {
+  ) {
     const target = e.target as HTMLElement;
     navigator.clipboard.writeText(target.innerText);
-  };
+  }
 
 
 
@@ -169,7 +156,6 @@ isListUpdated: ${isListUpdated}
 
       <Form onSubmit={(e)=>{handleSubmit(e)}}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-          {/* <Form.Label>Snippet</Form.Label> */}
           <Form.Control
             type="text"
             onChange={(e) => setFormSnippet(e.target.value)}
