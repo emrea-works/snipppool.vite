@@ -3,9 +3,16 @@ import { useState, useEffect } from "react";
 import { Header, Footer } from "./components/LayoutElements";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
-import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import { Trash } from "react-bootstrap-icons";
+
+const {
+  VITE_PORT,
+  VITE_APIURL,
+  VITE_QUERY_RETRIEVE,
+  VITE_QUERY_DELETE,
+  VITE_QUERY_INSERT,
+} = import.meta.env;
 
 interface SnippetData {
   id: number;
@@ -19,11 +26,11 @@ function App() {
   const [formSnippet, setFormSnippet] = useState<SnippetData["snippet"]>("");
   const [formCat, setFormCat] = useState<SnippetData["cat"]>("");
   const [formTag, setFormTag] = useState<SnippetData["tag"]>("");
-  const [isItemDeleted, setIsItemDeleted] = useState<Boolean>(false);
+  const [isItemDeleted, setIsItemDeleted] = useState<boolean>(false);
 
   async function handleSubmit() {
     try {
-      const response = await fetch("http://localhost:5412/insert", {
+      const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_INSERT}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +56,7 @@ function App() {
     // if (id == null || typeof id == undefined) return;
 
     try {
-      const response = await fetch(`http://localhost:5412/delete`, {
+      const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_DELETE}`, {
         method: "DELETE",
         headers: {
           "Content-type": "application/json",
@@ -79,7 +86,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5412/retrieveList");
+        const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_RETRIEVE}`);
         const data = await response.json();
         setList(data);
         // console.log(JSON.stringify(data, null, 2));
@@ -138,17 +145,17 @@ function App() {
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
           {/* <Form.Label>Snippet</Form.Label> */}
-          <FormControl
+          <Form.Control
             type="text"
             onChange={(e) => setFormSnippet(e.target.value)}
             placeholder="Snippet"
           />
-          <FormControl
+          <Form.Control
             type="text"
             onChange={(e) => setFormCat(e.target.value)}
             placeholder="Category"
           />
-          <FormControl
+          <Form.Control
             type="text"
             onChange={(e) => setFormTag(e.target.value)}
             placeholder="Tag"
