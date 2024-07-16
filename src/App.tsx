@@ -26,9 +26,41 @@ function App() {
   const [formSnippet, setFormSnippet] = useState<SnippetData["snippet"]>("");
   const [formCat, setFormCat] = useState<SnippetData["cat"]>("");
   const [formTag, setFormTag] = useState<SnippetData["tag"]>("");
-  const [isItemDeleted, setIsItemDeleted] = useState<boolean>(false);
+  const [isListUpdated, setIsListUpdated] = useState<boolean>(false);
 
-  async function handleSubmit() {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_RETRIEVE}`);
+        const data = await response.json();
+        setList(data);
+        // console.log(JSON.stringify(data, null, 2));
+      } catch (error) {
+        console.error({ message: "Error while fetching data, ", error });
+      } finally {
+        setIsListUpdated(false)
+      }
+    };
+    fetchData();
+  }, [isListUpdated]);
+
+
+
+  console.log(`
+initial values:
+-------------------------------------------
+formSnippet: ${formSnippet} 
+formCat: ${formCat} 
+formTag: ${formTag} 
+isListUpdated: ${isListUpdated}
+  `)
+
+
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    
     try {
       const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_INSERT}`, {
         method: "POST",
@@ -44,6 +76,7 @@ function App() {
 
       if (response.ok) {
         console.log("POST request successful");
+        setIsListUpdated(true);
       } else {
         console.error("POST request failed");
       }
@@ -51,6 +84,8 @@ function App() {
       console.error("Error:", error);
     }
   }
+
+
 
   const handleDelete = async (itemId: SnippetData["id"]) => {
     // if (id == null || typeof id == undefined) return;
@@ -67,7 +102,7 @@ function App() {
       if (response.ok) {
         const data = await response.json();
         console.log(data.message);
-        setIsItemDeleted(true);
+        setIsListUpdated(true);
       } else {
         console.error("Error deleting data:", response.status);
       }
@@ -76,6 +111,8 @@ function App() {
     }
   };
 
+
+
   const handleCopy = (
     e: React.MouseEvent<HTMLTableCellElement, MouseEvent>
   ) => {
@@ -83,19 +120,7 @@ function App() {
     navigator.clipboard.writeText(target.innerText);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${VITE_APIURL}:${VITE_PORT}/${VITE_QUERY_RETRIEVE}`);
-        const data = await response.json();
-        setList(data);
-        // console.log(JSON.stringify(data, null, 2));
-      } catch (error) {
-        console.error({ message: "Error while fetching data, ", error });
-      }
-    };
-    fetchData();
-  }, [isItemDeleted]);
+
 
   return (
     <Container fluid={"lg"}>
@@ -142,7 +167,7 @@ function App() {
 
       <hr className="my-4" />
 
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={(e)=>{handleSubmit(e)}}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
           {/* <Form.Label>Snippet</Form.Label> */}
           <Form.Control
