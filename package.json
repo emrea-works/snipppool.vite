@@ -11,6 +11,7 @@
     "serve:dev": "nodemon ./server.mjs"
   },
   "dependencies": {
+    "@sqlitecloud/drivers": "^1.0.245",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -19,12 +20,12 @@
     "react-bootstrap": "^2.10.4",
     "react-bootstrap-icons": "^1.11.4",
     "react-dom": "^18.3.1",
-    "sass": "^1.77.8",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sass": "^1.77.8"
   },
   "devDependencies": {
-    "@types/node": "^20.14.11",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.16.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
